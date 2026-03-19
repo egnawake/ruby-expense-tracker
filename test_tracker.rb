@@ -38,4 +38,11 @@ class TestTracker < Minitest::Test
     console = t.at_id(2)
     assert_equal("PS5", console.description)
   end
+
+  def test_delete_expense
+    t = Tracker.new
+    t.add("Phone", 600)
+    t.delete(1)
+    assert_empty(t.expenses)
+  end
 end

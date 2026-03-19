@@ -28,4 +28,8 @@ class Tracker
       end
     end
   end
+
+  def delete(id)
+    @expenses = @expenses.filter { |e| id != e.id }
+  end
 end
