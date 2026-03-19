@@ -1,6 +1,8 @@
 require_relative "expense"
 
 class Tracker
+  include Enumerable
+
   attr_reader :expenses
 
   def initialize
@@ -32,4 +34,6 @@ class Tracker
   def delete(id)
     @expenses = @expenses.filter { |e| id != e.id }
   end
+
+  def each(&) = expenses.each(&)
 end

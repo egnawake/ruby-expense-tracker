@@ -45,4 +45,12 @@ class TestTracker < Minitest::Test
     t.delete(1)
     assert_empty(t.expenses)
   end
+
+  def test_iterate
+    t = Tracker.new
+    t.add("Dinner", 20)
+    t.add("Phone", 500)
+    t.add("Tickets", 150)
+    assert_equal(["Dinner", "Phone", "Tickets"], t.map { |e| e.description })
+  end
 end
