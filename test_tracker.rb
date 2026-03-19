@@ -17,17 +17,25 @@ class TestTracker < Minitest::Test
     assert_equal(20, t.expenses[0].amount)
   end
 
+  def test_find_expense
+    t = Tracker.new
+    t.add("Tickets", 100)
+
+    refute_nil(t.at_id(1))
+    assert_nil(t.at_id(34))
+  end
+
   def test_update_expense
     t = Tracker.new
     t.add("Dinner", 25)
     t.add("Switch 2", 400)
 
     t.update(1, amount: 30)
-    dinner = t.expenses.find { |e| e.id == 1 }
+    dinner = t.at_id(1)
     assert_equal(30, dinner.amount)
 
     t.update(2, description: "PS5")
-    console = t.expenses.find { |e| e.id == 2 }
+    console = t.at_id(2)
     assert_equal("PS5", console.description)
   end
 end

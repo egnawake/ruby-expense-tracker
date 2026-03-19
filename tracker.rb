@@ -8,6 +8,10 @@ class Tracker
     @id = Enumerator.produce(1, &:succ)
   end
 
+  def at_id(id)
+    @expenses.find { |e| id == e.id }
+  end
+
   def add(description, amount)
     @expenses << Expense.new(@id.next, Time.now, description, amount)
   end
