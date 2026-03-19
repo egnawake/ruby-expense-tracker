@@ -1,0 +1,8 @@
+FROM docker.io/fedora:43
+
+RUN dnf install -y tmux helix rbenv
+RUN rbenv init
+RUN rbenv install 4.0.1
+RUN rbenv global 4.0.1
+
+CMD [ "/bin/bash", "--login" ]
