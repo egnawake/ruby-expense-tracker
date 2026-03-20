@@ -9,4 +9,8 @@ class Expense
     @description = description
     @amount = amount
   end
+
+  def to_s
+    "(#{id} | #{timestamp.strftime("%d/%m/%Y")}) #{description} - #{amount}€"
+  end
 end
