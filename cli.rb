@@ -76,6 +76,29 @@ class CLI
     @tracker.delete(id)
     @tracker.save
   end
+
+  private def summary
+    month = nil
+
+    parser = OptionParser.new
+    parser.on("--month MM", Integer) do |value|
+      month = value
+    end
+
+    parser.parse!
+
+    total =
+      if month
+        @tracker
+          .filter { |e| month == e.timestamp.month }
+          .map { |e| e.amount }
+          .sum
+      else
+        @tracker.map { |e| e.amount }.sum
+      end
+
+    puts "#{total}€"
+  end
 end
 
 CLI.new.run
