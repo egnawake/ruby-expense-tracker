@@ -58,6 +58,24 @@ class CLI
     @tracker.update(id, description:, amount:)
     @tracker.save
   end
+
+  private def delete
+    id = nil
+
+    parser = OptionParser.new
+    parser.on("--id ID", Integer) do |value|
+      id = value
+    end
+    parser.parse!
+
+    unless id
+      STDERR.puts "Expense ID missing"
+      return
+    end
+
+    @tracker.delete(id)
+    @tracker.save
+  end
 end
 
 CLI.new.run
