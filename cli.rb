@@ -31,6 +31,33 @@ class CLI
       puts expense
     end
   end
+
+  private def update
+    description = nil
+    amount = nil
+    id = nil
+
+    parser = OptionParser.new
+    parser.on("-d", "--description DESC") do |value|
+      description = value
+    end
+    parser.on("-a", "--amount AMNT", Integer) do |value|
+      amount = value
+    end
+    parser.on("--id ID", Integer) do |value|
+      id = value
+    end
+
+    parser.parse!
+
+    unless id
+      STDERR.puts "Expense ID missing"
+      return
+    end
+
+    @tracker.update(id, description:, amount:)
+    @tracker.save
+  end
 end
 
 CLI.new.run
