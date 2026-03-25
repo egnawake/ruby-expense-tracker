@@ -1,6 +1,9 @@
 require_relative "tracker"
 require "minitest/autorun"
 
+# TODO: make tests not depend on expense data on disk
+# Separate tracker initialization and data loading?
+# Mock expenses file?
 class TestTracker < Minitest::Test
   def test_create
     assert_empty(Tracker.new.expenses)
@@ -52,5 +55,16 @@ class TestTracker < Minitest::Test
     t.add("Phone", 500)
     t.add("Tickets", 150)
     assert_equal(["Dinner", "Phone", "Tickets"], t.map { |e| e.description })
+  end
+
+  def test_add_and_persist
+    s = StringIO.new("", "w")
+    t = Tracker.new
+    timestamp = Time.new(2018, 6, 14)
+    Time.stub :now, timestamp do
+      t.add("Lunch", 15)
+    end
+    t.write_csv(s)
+    assert_equal("1,#{timestamp},Lunch,15\n", s.string)
   end
 end
