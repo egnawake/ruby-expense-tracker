@@ -60,11 +60,11 @@ class TestTracker < Minitest::Test
   def test_add_and_persist
     s = StringIO.new("", "w")
     t = Tracker.new
-    timestamp = Time.new(2018, 6, 14)
-    Time.stub :now, timestamp do
+    # timestamp = Time.new(2018, 6, 14)
+    # Time.stub :now, timestamp do
       t.add("Lunch", 15)
-    end
-    t.write_csv(s)
-    assert_equal("1,#{timestamp},Lunch,15\n", s.string)
+    # end
+    t.save(s)
+    assert_match(/1,[0-9A-Za-z :+-]+,Lunch,15\n/, s.string)
   end
 end

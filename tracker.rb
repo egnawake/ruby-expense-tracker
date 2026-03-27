@@ -7,26 +7,18 @@ class Tracker
 
   attr_reader :expenses
 
-  def initialize(csv_path = default_csv_path)
+  def initialize
     @expenses = []
-    @csv_path = csv_path
-
-    start_id = 1
-
-    if File.exist?(csv_path)
-      File.open(csv_path, "r") do |file|
-        load_csv(file)
-      end
-      start_id = @expenses.map(&:id).max + 1
-    end
-
-    @id = Enumerator.produce(start_id, &:succ)
+    @id = create_id(1)
   end
 
-  def save
-    File.open(@csv_path, "w") do |file|
-      write_csv(file)
-    end
+  def load(io)
+    @expenses = load_csv(io)
+    @id = create_id(@expenses.map(&:id).max + 1)
+  end
+
+  def save(io)
+    write_csv(io)
   end
 
   def at_id(id)
@@ -56,25 +48,24 @@ class Tracker
 
   def each(&) = expenses.each(&)
 
-  private def load_csv(data)
-    CSV.foreach(data) do |row|
+  private def create_id(start) = Enumerator.produce(start, &:succ)
+
+  private def load_csv(io)
+    data = []
+    CSV.foreach(io) do |row|
       id = Integer(row[0])
       timestamp = Time.parse(row[1])
       description = row[2]
       amount = Integer(row[3])
 
-      @expenses << Expense.new(id, timestamp, description, amount)
+      data << Expense.new(id, timestamp, description, amount)
     end
+    data
   end
 
-  private def write_csv(data)
+  private def write_csv(io)
     each do |expense|
-      data << [expense.id, expense.timestamp, expense.description, expense.amount].to_csv
+      io << [expense.id, expense.timestamp, expense.description, expense.amount].to_csv
     end
-  end
-
-  private def default_csv_path
-    dir = ENV["XDG_DATA_HOME"] || File.join(ENV["HOME"], ".local", "share")
-    File.join(dir, "expense_data.csv")
   end
 end

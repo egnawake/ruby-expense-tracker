@@ -5,8 +5,21 @@ class CLI
   def run
     @tracker = Tracker.new
 
+    data_path = default_csv_path
+    if File.exist? data_path
+      File.open(data_path, "r") do |file|
+        @tracker.load(file)
+      end
+    end
+
     command = ARGV.shift
     send(command)
+  end
+
+  private def save
+    File.open(default_csv_path, "w") do |file|
+      @tracker.save(file)
+    end
   end
 
   private def add
@@ -23,7 +36,7 @@ class CLI
     parser.parse!
 
     @tracker.add(description, amount)
-    @tracker.save
+    save
   end
 
   private def list
@@ -56,7 +69,7 @@ class CLI
     end
 
     @tracker.update(id, description:, amount:)
-    @tracker.save
+    save
   end
 
   private def delete
@@ -74,7 +87,7 @@ class CLI
     end
 
     @tracker.delete(id)
-    @tracker.save
+    save
   end
 
   private def summary
@@ -98,6 +111,11 @@ class CLI
       end
 
     puts "#{total}€"
+  end
+
+  private def default_csv_path
+    dir = ENV["XDG_DATA_HOME"] || File.join(ENV["HOME"], ".local", "share")
+    File.join(dir, "expense_data.csv")
   end
 end
 
