@@ -1,9 +1,6 @@
 require_relative "tracker"
 require "minitest/autorun"
 
-# TODO: make tests not depend on expense data on disk
-# Separate tracker initialization and data loading?
-# Mock expenses file?
 class TestTracker < Minitest::Test
   def test_create
     assert_empty(Tracker.new.expenses)
