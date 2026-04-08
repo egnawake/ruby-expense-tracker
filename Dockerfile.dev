@@ -5,4 +5,7 @@ RUN rbenv init
 RUN rbenv install 4.0.1
 RUN rbenv global 4.0.1
 
+ENV COLORTERM=truecolor
+RUN echo 'set -as terminal-features ",*:RGB"' > "$HOME/.tmux.conf"
+
 CMD [ "/bin/bash", "--login" ]
