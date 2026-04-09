@@ -14,7 +14,8 @@ class Tracker
 
   def load(io)
     @expenses = load_csv(io)
-    @id = create_id(@expenses.map(&:id).max + 1)
+    max_id = @expenses.empty? ? 1 : @expenses.map(&:id).max
+    @id = create_id(max_id)
   end
 
   def save(io)
